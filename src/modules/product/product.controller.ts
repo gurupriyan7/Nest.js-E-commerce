@@ -7,6 +7,7 @@ import {
   Get,
   Param,
   Patch,
+  Delete,
 } from '@nestjs/common';
 import { Response } from 'express';
 import { ProductService } from './product.service';
@@ -69,6 +70,19 @@ export class ProductsController {
         productId,
         updateProductDto,
       );
+      return responseUtils.success(res, { data, status: HttpStatus.OK });
+    } catch (error) {
+      return responseUtils.error({ res, error });
+    }
+  }
+
+  @Delete(':productId')
+  async deleteProduct(
+    @Res() res: Response,
+    @Param('productId') productId: string,
+  ) {
+    try {
+      const data = await this.productService.deleteProduct(productId);
       return responseUtils.success(res, { data, status: HttpStatus.OK });
     } catch (error) {
       return responseUtils.error({ res, error });

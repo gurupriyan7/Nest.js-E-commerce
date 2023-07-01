@@ -5,7 +5,6 @@ import { InjectModel } from '@nestjs/mongoose';
 import { CreateProductDto } from './product.dto';
 import { SizesService } from '../sizes/sizes.service';
 import { createSizeData, updateSizeData } from 'src/utils/size.utils';
-import { populate } from 'dotenv';
 import { GetProductLogs } from './product.interface';
 
 @Injectable()
@@ -91,5 +90,16 @@ export class ProductService {
       .populate({
         path: 'sizes',
       });
+  }
+
+  async deleteProduct(productId: string): Promise<ProductsModel | null> {
+    const product = await this.productsModel.findByIdAndRemove(productId);
+    if(!product){
+      throw new Error("Product Not found")
+    }
+
+    await this.sizesService.deleteSize(product?.sizes.toString())
+
+    return product;
   }
 }

@@ -25,4 +25,8 @@ export class SizesService {
   ): Promise<SizesModel | null> {
     return await this.sizesModel.findByIdAndUpdate(sizeId, updateSizeDto);
   }
+
+  async deleteSize(sizeId: string): Promise<SizesModel | null> {
+    return await this.sizesModel.findByIdAndRemove(sizeId);
+  }
 }
