@@ -1,5 +1,5 @@
 export enum ProductSize {
-  Small = 'S',
-  Medium = 'M',
-  Large = 'L',
+  Small = 's',
+  Medium = 'm',
+  Large = 'l',
 }

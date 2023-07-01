@@ -4,9 +4,7 @@ import {
   IsNumber,
   IsArray,
   ArrayNotEmpty,
-  IsEnum,
 } from 'class-validator';
-import { ProductSize } from 'src/constants/enums';
 
 export class CreateProductDto {
   @IsNotEmpty()
@@ -29,8 +27,15 @@ export class CreateProductDto {
   @ArrayNotEmpty()
   videos: string[];
 
-  @IsArray()
-  @ArrayNotEmpty()
-  @IsEnum(ProductSize)
-  sizes: ProductSize[];
+  @IsNotEmpty()
+  @IsNumber()
+  s: number;
+
+  @IsNotEmpty()
+  @IsNumber()
+  m: number;
+
+  @IsNotEmpty()
+  @IsNumber()
+  l: number;
 }
