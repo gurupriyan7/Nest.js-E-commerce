@@ -6,6 +6,7 @@ import { CreateProductDto } from './product.dto';
 import { SizesService } from '../sizes/sizes.service';
 import { createSizeData, updateSizeData } from 'src/utils/size.utils';
 import { GetProductLogs } from './product.interface';
+import { errorMessages } from 'src/constants/messages';
 
 @Injectable()
 export class ProductService {
@@ -45,10 +46,15 @@ export class ProductService {
     });
   }
 
-  async getAllProducts(): Promise<ProductsModel[]> {
-    return await this.productsModel.find().populate({
-      path: 'sizes',
-    });
+  async getAllProducts({
+    query,
+    options,
+    populate,
+  }: GetProductLogs): Promise<ProductsModel[]> {
+    return await this.productsModel
+      .find(query, {}, options)
+      .populate(populate as string)
+      .exec();
   }
 
   async getProduct({
@@ -58,7 +64,8 @@ export class ProductService {
   }: GetProductLogs): Promise<ProductsModel | null> {
     return await this.productsModel
       .findById(query, {}, options)
-      .populate(populate as string);
+      .populate(populate as string)
+      .exec();
   }
 
   async updateProduct(
@@ -94,11 +101,11 @@ export class ProductService {
 
   async deleteProduct(productId: string): Promise<ProductsModel | null> {
     const product = await this.productsModel.findByIdAndRemove(productId);
-    if(!product){
-      throw new Error("Product Not found")
+    if (!product) {
+      throw new Error(errorMessages.noProduct);
     }
 
-    await this.sizesService.deleteSize(product?.sizes.toString())
+    await this.sizesService.deleteSize(product?.sizes.toString());
 
     return product;
   }

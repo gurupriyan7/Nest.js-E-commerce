@@ -12,3 +12,4 @@ export interface GetProductLogs {
   populate?: PopulateOptions | string;
   options?: QueryOptions;
 }
+

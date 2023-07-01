@@ -4,6 +4,7 @@ import {
   IsNumber,
   IsArray,
   ArrayNotEmpty,
+  IsOptional,
 } from 'class-validator';
 
 export class CreateProductDto {
@@ -38,4 +39,14 @@ export class CreateProductDto {
   @IsNotEmpty()
   @IsNumber()
   l: number;
+}
+
+export class GetAllProductsDto {
+  @IsOptional()
+  @IsString()
+  limit: string;
+
+  @IsOptional()
+  @IsString()
+  page: string;
 }

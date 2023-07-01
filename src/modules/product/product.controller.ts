@@ -8,11 +8,13 @@ import {
   Param,
   Patch,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { Response } from 'express';
 import { ProductService } from './product.service';
-import { CreateProductDto } from './product.dto';
+import { CreateProductDto, GetAllProductsDto } from './product.dto';
 import responseUtils from 'src/utils/response-utils';
+import { getPaginationOptions } from 'src/utils/pagination.utils';
 
 @Controller('products')
 export class ProductsController {
@@ -32,9 +34,25 @@ export class ProductsController {
   }
 
   @Get()
-  async getAllProducts(@Res() res: Response) {
+  async getAllProducts(
+    @Res() res: Response,
+    @Query() queryParam: GetAllProductsDto,
+  ) {
     try {
-      const data = await this.productService.getAllProducts();
+      const paginationOptions = getPaginationOptions({
+        limit: queryParam.limit,
+        page: queryParam.page,
+      });
+      const data = await this.productService.getAllProducts({
+        query: {},
+        options: {
+          ...paginationOptions,
+          sort: { updatedAt: -1 },
+        },
+        populate: {
+          path: 'sizes',
+        },
+      });
       return responseUtils.success(res, { data, status: HttpStatus.OK });
     } catch (error) {
       return responseUtils.error({ res, error });
